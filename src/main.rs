@@ -1,8 +1,8 @@
-use std::fs;
+use std::{fs, io::ErrorKind};
 
 fn main() {
 
-    let image_ext: Vec<&str> = vec!["png", "jpg"];
+    let image_ext: Vec<&str> = vec!["png", "jpg", "jpeg", "gif"];
 
     let paths = fs::read_dir("./").unwrap();
 
@@ -17,21 +17,21 @@ fn main() {
 
             if ext.len() > 1 {
                 println!("ext: {}", ext[1]);
-                if image_ext.contains(&ext[1]) {
-                    println!("it is an image");
-                } else {
-                    println!("it is not an image");
+                let ext_name = ext[1];
+                if image_ext.contains(&ext_name) {
+                    let res = fs::rename(path_name, "./images/".to_owned() + path_name);
+                    if let Err(err) = res {
+                        match err.kind() {
+                            ErrorKind::NotFound => {
+                                fs::create_dir("./images").unwrap();
+                                fs::rename(path_name, "./images/".to_owned() + path_name).expect(format!("error occured during moving {}", path_name).as_str());
+                            },
+                            _ => panic!("error occured during moving the files")
+                        }
+                    }
                 }
             }
         }
     }
 }
 
-// fn is_in(list: &Vec<&str>, target: &str) -> bool {
-//     for ext in list {
-//         if ext == &target {
-//             return true;
-//         }
-//     }
-//     false
-// }
