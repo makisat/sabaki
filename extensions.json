@@ -1,0 +1,5 @@
+{
+	"images": ["png", "jpg", "jpeg", "gif"],
+	"videos": ["mp4", "mov", "avi"],
+	"docs": ["doc", "docx", "csv", "ppt", "pptx", "xml", "html", "pdf", "txt"]
+}
