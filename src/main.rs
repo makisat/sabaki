@@ -2,9 +2,25 @@ use std::{fs, io::ErrorKind};
 use serde_json::Value;
 
 fn main() {
-    let ext_val = read_json("/home/makisat/Apps/sabaki/extensions.json");
+    let ext_dir;
 
+    let args: Vec<String> = std::env::args().collect();
+    if args.len() != 1 {
+        match args[2].as_str() {
+            "set" => {
+                if args.len() < 3 {
+                    println!("needs to specify ext_dir");
+                    return;
+                } 
+                ext_dir = args[2];
+            },
+            other => println!("{} is not a command", other)
+        }
+    }
+
+    let ext_val = read_json(ext_dir.as_str());
     let ext_obj = ext_val.as_object().unwrap();
+    let ext_dir = ext_obj["ext_dir"].as_str().unwrap();
 
     let paths = fs::read_dir("./").unwrap();
 
